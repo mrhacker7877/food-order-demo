@@ -23,7 +23,6 @@ function Home() {
   let tax = subtotal * 0.05;
   let total = subtotal + tax;
 
-  // CATEGORY FILTER
   function filter(categoryName) {
     if (categoryName === "All") {
       setCate(food_items);
@@ -77,17 +76,17 @@ function Home() {
         )}
       </div>
 
-      {/* CART */}
+      {/* CART PANEL */}
       <div
         className={`fixed top-0 right-0
         w-full sm:w-[80vw] md:w-[50vw] lg:w-[40vw]
-        h-screen bg-white shadow-xl p-6
+        h-screen bg-white shadow-xl
         transition-transform duration-300 z-50
         flex flex-col
         ${showCart ? "translate-x-0" : "translate-x-full"}`}
       >
         {/* Header */}
-        <header className="w-full flex justify-between items-center">
+        <header className="w-full flex justify-between items-center p-6">
           <span className="text-green-400 text-[18px] font-semibold">
             Order items
           </span>
@@ -97,8 +96,10 @@ function Home() {
           />
         </header>
 
-        {/* Cart Items */}
-        <div className="mt-6 flex flex-col gap-4 overflow-y-auto flex-1 pr-1">
+        {/* SCROLLABLE CONTENT (Entire cart body scrolls) */}
+        <div className="flex-1 overflow-y-auto px-6 pb-4 flex flex-col gap-4">
+
+          {/* Cart Items */}
           {items.length === 0 ? (
             <p className="text-center text-gray-400 mt-10">
               Your cart is empty
@@ -115,45 +116,49 @@ function Home() {
               />
             ))
           )}
+
+          {/* Cart Summary */}
+          <div className="w-full border-t-2 border-gray-300 pt-4 mt-4 flex flex-col gap-3">
+
+            {/* Subtotal */}
+            <div className="flex justify-between text-gray-600">
+              <span>Subtotal</span>
+              <span className="font-semibold">Rs {subtotal}/-</span>
+            </div>
+
+            {/* Tax */}
+            <div className="flex justify-between text-gray-600">
+              <span>Tax (5%)</span>
+              <span className="font-semibold">
+                Rs {tax.toFixed(2)}/-
+              </span>
+            </div>
+
+            {/* Total */}
+            <div className="flex justify-between text-lg font-semibold text-green-500 border-t pt-3">
+              <span>Total</span>
+              <span>Rs {total.toFixed(2)}/-</span>
+            </div>
+
+            {/* Special Note */}
+            <div className="mt-2">
+              <label className="text-sm font-medium text-gray-600">
+                Special Note
+              </label>
+              <textarea
+                placeholder="Add cooking instructions..."
+                className="w-full mt-2 p-2 border rounded-lg outline-none focus:ring-2 focus:ring-green-400 resize-none text-sm"
+                rows="3"
+              />
+            </div>
+
+          </div>
         </div>
 
-        {/* Cart Summary */}
-        <div className="w-full border-t-2 border-gray-300 pt-4 mt-4 flex flex-col gap-3">
-          {/* Subtotal */}
-          <div className="flex justify-between text-gray-600">
-            <span>Subtotal</span>
-            <span className="font-semibold">Rs {subtotal}/-</span>
-          </div>
-
-          {/* Tax */}
-          <div className="flex justify-between text-gray-600">
-            <span>Tax (5%)</span>
-            <span className="font-semibold">
-              Rs {tax.toFixed(2)}/-
-            </span>
-          </div>
-
-          {/* Total */}
-          <div className="flex justify-between text-lg font-semibold text-green-500 border-t pt-3">
-            <span>Total</span>
-            <span>Rs {total.toFixed(2)}/-</span>
-          </div>
-
-          {/* Special Note */}
-          <div className="mt-2">
-            <label className="text-sm font-medium text-gray-600">
-              Special Note
-            </label>
-            <textarea
-              placeholder="Add cooking instructions..."
-              className="w-full mt-2 p-2 border rounded-lg outline-none focus:ring-2 focus:ring-green-400 resize-none text-sm"
-              rows="3"
-            />
-          </div>
-
-          {/* Place Order */}
+        {/* FIXED BUTTON (Never moves now) */}
+        <div className="p-6 border-t bg-white">
           <button
-            className="w-full mt-3 bg-green-500 hover:bg-green-600 text-white py-3 rounded-lg font-semibold transition-all disabled:bg-gray-300"
+            className="w-full bg-green-500 hover:bg-green-600 text-white py-3 rounded-lg font-semibold transition-all disabled:bg-gray-300"
             disabled={items.length === 0}
           >
             Place Order

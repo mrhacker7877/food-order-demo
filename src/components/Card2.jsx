@@ -11,7 +11,7 @@ function Card2({ name, id, price, image, qty }) {
     <div className="w-full p-3 shadow-lg rounded-xl flex items-center justify-between gap-3">
       
       {/* LEFT SIDE */}
-      <div className="flex items-center gap-4 flex-1">
+      <div className="flex items-center gap-4 flex-1 min-w-0">
         
         {/* Image */}
         <div className="w-20 h-20 sm:w-24 sm:h-24 rounded-lg overflow-hidden flex-shrink-0">
@@ -23,9 +23,10 @@ function Card2({ name, id, price, image, qty }) {
         </div>
 
         {/* Name + Qty */}
-        <div className="flex flex-col justify-center gap-3">
+        <div className="flex flex-col justify-center gap-3 flex-1 min-w-0">
           
-          <div className="text-sm sm:text-base font-semibold text-gray-600">
+          {/* Name */}
+          <div className="text-sm sm:text-base font-semibold text-gray-600 truncate">
             {name}
           </div>
 
@@ -38,7 +39,7 @@ function Card2({ name, id, price, image, qty }) {
               -
             </button>
 
-            <span className="w-1/3 flex items-center justify-center bg-slate-200 text-green-500">
+            <span className="w-1/3 flex items-center justify-center bg-slate-200 text-green-500 font-medium">
               {qty}
             </span>
 
@@ -53,10 +54,10 @@ function Card2({ name, id, price, image, qty }) {
       </div>
 
       {/* RIGHT SIDE */}
-      <div className="flex flex-col items-end justify-center gap-3 min-w-[80px]">
+      <div className="flex flex-col items-end justify-between self-stretch min-w-[90px]">
         
         {/* Price */}
-        <span className="text-sm sm:text-base font-semibold text-green-500">
+        <span className="text-sm sm:text-base font-semibold text-green-500 whitespace-nowrap">
           Rs {price * qty}/-
         </span>
 
