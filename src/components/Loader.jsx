@@ -11,7 +11,7 @@ function Loader() {
 
       {/* App Name */}
       <h1 className="mt-4 text-2xl font-bold text-green-600">
-        Food Ordering
+        WELCOME TO ROYAL KITCHEN
       </h1>
 
       {/* Loading Text */}

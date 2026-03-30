@@ -29,7 +29,7 @@ function Card({ name, image, id, price, type }) {
           const exist = items.find(item => item.id === id);
 
           if (exist) {
-            toast.error(`${name} already exists`, {
+            toast.error(`${name} already exists in your cart`, {
               style: {
                 background: "#fee2e2",
                 color: "#b91c1c"

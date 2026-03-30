@@ -7,10 +7,23 @@ import Card from "../components/Card.jsx";
 import { food_items } from "./food.js";
 import { RxCross2 } from "react-icons/rx";
 import Card2 from "../components/Card2.jsx";
+import OrderSuccess from "../components/OrderSuccess.jsx";
+import { useState } from "react";
 
 function Home() {
   const { Cate, setCate, input, showCart, setShowCart } =
     useContext(dataContext);
+    const [lastOrder, setLastOrder] = useState(null);
+
+const isSameOrder = (items1, items2) => {
+  if (!items1 || !items2) return false;
+  if (items1.length !== items2.length) return false;
+
+  return items1.every((item, index) => (
+    item.id === items2[index].id &&
+    item.qty === items2[index].qty
+  ));
+};
 
   const items = useSelector((state) => state.cart);
 
@@ -34,7 +47,7 @@ function Home() {
       setCate(newList);
     }
   }
-
+const [showSuccess, setShowSuccess] = useState(false);
   return (
     <div className="bg-slate-100 min-h-screen">
       <Nav />
@@ -158,11 +171,73 @@ function Home() {
         {/* FIXED BUTTON (Never moves now) */}
         <div className="p-6 border-t bg-white">
           <button
-            className="w-full bg-green-500 hover:bg-green-600 text-white py-3 rounded-lg font-semibold transition-all disabled:bg-gray-300"
-            disabled={items.length === 0}
-          >
-            Place Order
-          </button>
+  onClick={async () => {
+    // Extract table from QR ?table=5
+    const params = new URLSearchParams(window.location.search);
+    const tableNumber = params.get('table');
+    
+    if (!tableNumber) {
+      alert('Please scan table QR code first!');
+      return;
+    }
+    
+    if (items.length === 0) {
+      alert('Cart is empty!');
+      return;
+    }
+
+    // ✅ ADDED: duplicate check (ONLY THIS BLOCK)
+    if (isSameOrder(items, lastOrder)) {
+      alert("Items already ordered");
+      return;
+    }
+    
+    // Get special note from YOUR textarea
+    const specialNoteTextarea = document.querySelector('textarea');
+    const specialNote = specialNoteTextarea ? specialNoteTextarea.value : '';
+    
+    try {
+      const response = await fetch('http://localhost:5000/api/orders', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          tableNumber: parseInt(tableNumber),
+          items: items,           
+          specialNote: specialNote,
+          subtotal: subtotal,     
+          tax: tax,               
+          total: total            
+        })
+      });
+      
+      const result = await response.json();
+      
+      if (result.success) {
+      
+        // ✅ ADDED: save last order (ONLY THIS LINE)
+        setLastOrder(items.map(item => ({ ...item })));
+
+        // dispatch(clearCart());
+        setShowSuccess(true);     
+      } else {
+        alert('❌ Order failed: ' + result.message);
+      }
+    } catch (error) {
+      alert('❌ Network error. Check backend is running.');
+      console.error(error);
+    }
+  }}
+  className="w-full mt-3 bg-green-500 hover:bg-green-600 text-white py-3 rounded-lg font-semibold transition-all disabled:bg-gray-300"
+  disabled={items.length === 0}
+>
+  Place Order
+</button>
+<OrderSuccess 
+  show={showSuccess} 
+  onClose={() => setShowSuccess(false)} 
+/>  
         </div>
       </div>
     </div>
